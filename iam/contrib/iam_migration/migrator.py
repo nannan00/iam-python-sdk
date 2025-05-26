@@ -42,6 +42,9 @@ class IAMMigrator(object):
     def get_tenant_id():
         """
         获取应用所属的租户 ID
+        Note: BKPAAS_APP_TENANT_ID 和 BK_APP_TENANT_ID 的含义不一样
+            BKPAAS_APP_TENANT_ID 是应用的租户模式标识，表示应用是全租户还是单租户
+            BK_APP_TENANT_ID 是应用所属的租户 ID，表示应用是属于哪个租户的，即由哪个租户产生的
         """
         # PaaS 平台上部署运行的应用，会自动内置 BKPAAS_APP_TENANT_ID 环境变量，表示应用是全租户的还是单租户的
         tenant_id = os.environ.get("BKPAAS_APP_TENANT_ID")
