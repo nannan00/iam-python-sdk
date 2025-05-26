@@ -36,8 +36,10 @@ class IAMMigrator(object):
         self.migration_json = migration_json
         self._bk_app_code = getattr(settings, "APP_CODE", "")
         self._bk_app_secret = settings.SECRET_KEY
+        self._bk_app_tenant_id = self.get_tenant_id()
 
-    def get_tenant_id(self):
+    @staticmethod
+    def get_tenant_id():
         """
         获取应用所属的租户 ID
         """
@@ -79,6 +81,6 @@ class IAMMigrator(object):
         if not ok:
             raise exceptions.NetworkUnreachableError("bk iam ping error")
 
-        ok = do_migrate.do_migrate(data, iam_host, self._bk_app_code, self._bk_app_secret)
+        ok = do_migrate.do_migrate(data, iam_host, self._bk_app_code, self._bk_app_secret, self._bk_app_tenant_id)
         if not ok:
             raise exceptions.MigrationFailError("iam migrate fail")
