@@ -49,7 +49,7 @@ class IAMMigrator(object):
         # PaaS 平台上部署运行的应用，会自动内置 BKPAAS_APP_TENANT_ID 环境变量，表示应用是全租户的还是单租户的
         tenant_id = os.environ.get("BKPAAS_APP_TENANT_ID")
         if tenant_id is not None:
-            # 空字符串表示全租户应用，则返回 system
+            # 空字符串表示全租户应用，则返回 system，因为全租户应用只能在运营租户 (system) 下创建
             return tenant_id or "system"
 
         # 如果从环境变量获取不到，即非 PaaS 平台上运行，则需要从配置中获取
