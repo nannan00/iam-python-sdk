@@ -37,6 +37,21 @@ class IAMMigrator(object):
         self._bk_app_code = getattr(settings, "APP_CODE", "")
         self._bk_app_secret = settings.SECRET_KEY
 
+    def get_tenant_id(self):
+        """
+        获取应用所属的租户 ID
+        """
+        # PaaS 平台上部署运行的应用，会自动内置 BKPAAS_APP_TENANT_ID 环境变量，表示应用是全租户的还是单租户的
+        tenant_id = os.environ.get("BKPAAS_APP_TENANT_ID")
+        if tenant_id is not None:
+            # 空字符串表示全租户应用，则返回 system
+            return tenant_id or "system"
+
+        # 如果从环境变量获取不到，即非 PaaS 平台上运行，则需要从配置中获取
+        # 注意：对于单租户应用，BK_APP_TENANT_ID 可以不设置
+        #  对于全租户应用，BK_APP_TENANT_ID 必须设置，建议设置为 system
+        return getattr(settings, "BK_APP_TENANT_ID", "")
+
     def migrate(self):
         iam_host = getattr(settings, "BK_IAM_APIGATEWAY_URL", "")
         if iam_host == "":
